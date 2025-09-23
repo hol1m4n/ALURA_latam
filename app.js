@@ -10,7 +10,16 @@
 
 let amigo_n = ''; // Declaracion de la variable amigo cada vez que se hace click en el boton añadir
 
-const lista = []; // Lista de amigos
+var LISTA = []; // Lista de amigos
+
+let sorteo = Boolean(false); // Variable sorteo que indica hasta cuando se siguen recibiendo entradas para los amigos
+
+let c = 0; // Variable contador para el numero de entradas que recibira la caja de nombres
+
+let elementoHTML;
+
+let valorCaja;
+
 
 function evaluar_nombre(nombre){ // Funcion que evalua si el nombre tiene caracteres especiales o numeros
 
@@ -21,12 +30,18 @@ function evaluar_nombre(nombre){ // Funcion que evalua si el nombre tiene caract
     || nombre.includes('8') || nombre.includes('9') || nombre.includes('!') || nombre.includes('&')
     || nombre.includes('#') || nombre.includes('$') || nombre.includes('%') || nombre.includes('*')
     || nombre.includes('(') || nombre.includes(')') || nombre.includes('_') || nombre.includes('+')
-    || nombre.includes('@') || nombre.includes('^') || nombre.includes('-') || nombre.includes('=')){
-        console.log('El nombre solo debe contener letras')
-        return Boolean(false);
+    || nombre.includes('@') || nombre.includes('^') || nombre.includes('-') || nombre.includes('=')
+    || nombre.includes('[') || nombre.includes(']') || nombre.includes("'") || nombre.includes('"')
+    || nombre.includes(',') || nombre.includes('.') || nombre.includes(";") || nombre.includes(':')){
+        console.log('El nombre solo puede contener letras')
+        return 0;
+    }
+    if(nombre == ''){
+        console.log('Se debe agregar un valor no nulo')
+        return 1;
     }
     else{
-        return Boolean(true);
+        return 2;
     }
 }
 
@@ -37,9 +52,39 @@ function Mayuscula_PrimeraLetra(nombre) { // Si la primera letra del nombre vien
 
 
 
-function agregar_nombres(name){
+function agregarAmigo(){
 
-    
+
+    if (sorteo == Boolean(false)){
+
+        valorCaja = document.getElementById("resultado");
+        valorCaja.innerHTML = '';
+
+        amigo_n = document.getElementById('amigo').value;
+
+
+        if (evaluar_nombre(amigo_n) == 0){
+            alert('EL nombre solo puede contener letras');
+        }
+        if (evaluar_nombre(amigo_n) == 1){
+            alert('Se debe agregar un valor no nulo');
+        }
+        if (evaluar_nombre(amigo_n) == 2){
+
+            LISTA[c] = document.getElementById('amigo').value;
+            LISTA[c] = Mayuscula_PrimeraLetra(LISTA[c]);
+            console.log(LISTA);
+            c++;
+
+            valorCaja = document.querySelector('#amigo');
+            valorCaja.value = '';
+            valorCaja.placeholder = 'Escribe otro nombre o sortea si son mas de dos personas';
+        }
+
+        elementoHTML = document.getElementById("listaAmigos");
+        elementoHTML.innerHTML = LISTA.join("<br>");
+        
+    }    
 }
 
 
@@ -53,71 +98,59 @@ function agregar_nombres(name){
 
 
 
-for (let i = 0; i < 3; i++) {
-    lista[i] = prompt('Ingresa nombre');
-    while(evaluar_nombre(lista[i]) == Boolean(false)){
-        alert('EL nombre solo debe contener letras');
-        lista[i] = prompt('Ingresa nombre');
+
+
+
+
+
+function sortearAmigo(){
+
+    sorteo = Boolean(true);
+
+    n_entradas = LISTA.length;
+
+    if (n_entradas <= 2){
+        if(n_entradas == 0){
+            console.log('No se ha agregado ningun nombre. Por favor agrega al menos 3');
+            alert('No se ha agregado ningun nombre. Por favor agrega al menos 3');
+            sorteo = Boolean(false);
+        }
+        if(n_entradas > 0 && n_entradas <= 2){
+            console.log('Por favor agrega al menos 3 nombres');
+            alert('Por favor agrega al menos 3 nombres');
+            sorteo = Boolean(false);
+        }
     }
-    lista[i] = Mayuscula_PrimeraLetra(lista[i]);
-  }
+    else{
+
+        let aleatorio = Math.floor(Math.random() * (n_entradas + 1));
+        console.log(aleatorio);
+
+        amigo_secreto = LISTA[aleatorio]
 
 
-//lista[0] = prompt('Ingresa primer nombre')
-//lista[1] = prompt('Ingresa segundo nombre')
-//lista[2] = prompt('Ingresa tercer nombre') 
-
-
-console.log(lista)
-
-
-
-
+        valorCaja = document.querySelector('#amigo');
+        valorCaja.value = '';
+        valorCaja.placeholder = 'Añade un nuevo nombre para jugar otra vez (nueva lista)';
 
 
 
+        elementoHTML = document.getElementById("listaAmigos");
+        elementoHTML.innerHTML = '';
+        elementoHTML = document.getElementById("resultado");
+        elementoHTML.innerHTML = "Tu amig@ secret@ es : " + amigo_secreto;
 
 
 
+        amigo_n = '';
 
-
-
-
-//function agregarAmigo() {
-    //amigo_n = document.getElementById('amigo').value;
-    //console.log(amigo_n)
-    //let elementoHTML = document.getElementById('listaAmigos');
-    //elementoHTML.innerHTML = amigo_n
-
-    //lista_amigos++;
-
-    //limpiar_caja();
-    //return amigo_n;
-//}
-
-//console.log(amigo_n)
-
-
-//function limpiar_caja(){
-//    let inputElement = document.getElementById('amigo');
-    //inputElement.setAttribute('placeholder', 'Escribe un nombre o sortea');
-//}
-
-
-// const fruits = ["Banana", "Orange", "Apple", "Mango"];
-// let length = fruits.length;
-
-
-
-
-
-//function sortearAmigo() {
-    //alert("F2")
-//}
-
-
-
-
+        LISTA = [];
+        
+        sorteo = Boolean(false);
+        
+        c = 0;
+    }
+}
 
 
 
